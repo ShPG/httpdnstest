@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 27
     defaultConfig {
         applicationId "httpdnstest.shipeigang.com.httpdnstest"
-        minSdkVersion 23
-        targetSdkVersion 27
+        minSdkVersion 17
+        targetSdkVersion 17
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,4 +26,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+//    compile 'com.qiniu:happy-dns:0.2.13'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
 }
