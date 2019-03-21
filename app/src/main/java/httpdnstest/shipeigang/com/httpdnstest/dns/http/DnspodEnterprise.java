@@ -16,9 +16,6 @@ import httpdnstest.shipeigang.com.httpdnstest.dns.NetworkInfo;
 import httpdnstest.shipeigang.com.httpdnstest.dns.Record;
 import httpdnstest.shipeigang.com.httpdnstest.dns.util.Hex;
 
-/**
- * Created by bailong on 15/7/22.
- */
 public final class DnspodEnterprise implements IResolver {
     private final String id;
     private final String ip;

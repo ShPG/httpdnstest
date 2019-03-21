@@ -14,8 +14,6 @@ import java.net.IDN;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 
 /**
  * reference github/rtreffer/minidns.

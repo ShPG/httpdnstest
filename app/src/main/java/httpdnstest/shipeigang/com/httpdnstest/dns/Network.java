@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-/**
- * Created by bailong on 15/7/3.
- */
 public final class Network {
     private static String previousIp = "";
 

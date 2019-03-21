@@ -12,9 +12,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Random;
 
-/**
- * Created by bailong on 15/6/16.
- */
 public final class Resolver implements IResolver {
     private static final Random random = new Random();
 

@@ -1,8 +1,5 @@
 package httpdnstest.shipeigang.com.httpdnstest.dns;
 
-/**
- * Created by bailong on 15/6/21.
- */
 public final class NetworkInfo {
     /**
      * 默认网络供应商

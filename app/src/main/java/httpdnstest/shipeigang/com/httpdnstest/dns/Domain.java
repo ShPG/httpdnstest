@@ -1,8 +1,5 @@
 package httpdnstest.shipeigang.com.httpdnstest.dns;
 
-/**
- * Created by bailong on 15/6/17.
- */
 public final class Domain {
     /**
      * 域名

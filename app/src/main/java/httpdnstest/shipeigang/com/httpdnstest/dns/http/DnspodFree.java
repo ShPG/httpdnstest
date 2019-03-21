@@ -10,9 +10,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by bailong on 15/6/12.
- */
 public final class DnspodFree implements IResolver {
     private final String ip;
     private final int timeout;

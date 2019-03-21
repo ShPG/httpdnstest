@@ -1,8 +1,5 @@
 package httpdnstest.shipeigang.com.httpdnstest.dns;
 
-/**
- * Created by bailong on 15/6/12.
- */
 public final class Record {
     public static final int TTL_MIN_SECONDS = 600;
 

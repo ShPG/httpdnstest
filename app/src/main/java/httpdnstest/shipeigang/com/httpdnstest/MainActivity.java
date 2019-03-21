@@ -1,7 +1,10 @@
 package httpdnstest.shipeigang.com.httpdnstest;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import httpdnstest.shipeigang.com.httpdnstest.dns.DnsManager;
 import httpdnstest.shipeigang.com.httpdnstest.dns.IResolver;
@@ -19,10 +22,15 @@ import okhttp3.Dns;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView ip;
+    private String address="http://10.228.129.134:8080/aiohttpdns/d?host=www.baidu.com";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ip=findViewById(R.id.ip);
 
 
         new Thread(){
@@ -38,24 +46,22 @@ public class MainActivity extends AppCompatActivity {
 
                     if (ips == null || ips.length == 0) {
                         result=Dns.SYSTEM.lookup("www.baidu.com");
-                    }
-
-                    result = new ArrayList<>();
-
-
-                    for (String ip : ips) {  //将ip地址数组转换成所需要的对象列表
-                        result.addAll(Arrays.asList(InetAddress.getAllByName(ip)));
-                    }
-
-
-                    for (int i=0;i<result.size();i++)
+                    }else
                     {
-                        InetAddress add=result.get(i);
-                        String aa=add.getCanonicalHostName();
-                        String bb=add.getHostAddress();
-                        String cc=add.getHostName();
-                        String dd=add.getCanonicalHostName();
+                        result = new ArrayList<>();
+
+                        for (String ip : ips) {  //将ip地址数组转换成所需要的对象列表
+                            result.addAll(Arrays.asList(InetAddress.getAllByName(ip)));
+                        }
                     }
+
+
+
+
+                    Message m=Message.obtain();
+                    m.what=1;
+                    m.obj=result.get(0).getHostName();
+                    handler.sendMessage(m);
 
 
                 } catch (UnknownHostException e) {
@@ -72,6 +78,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 1){
+                    ip.setText(msg.obj.toString());
+            }
+
+        }
+    };
 
 
 
