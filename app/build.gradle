@@ -4,7 +4,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 26
     defaultConfig {
-        applicationId "httpdnstest.shipeigang.com.httpdnstest"
+        applicationId "com.spg.httpdnstest"
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 1
