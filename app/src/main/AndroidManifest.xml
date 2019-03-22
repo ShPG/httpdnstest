@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="httpdnstest.shipeigang.com.httpdnstest">
+    package="com.spg.httpdnstest">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.spg.httpdnstest.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,24 +20,20 @@
         android:theme="@style/AppTheme">
 
 
-        <receiver
-            android:name="httpdnstest.shipeigang.com.httpdnstest.dnscache.net.networktype.NetworkStateReceiver"
-            android:label="NetworkConnection" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
 
-
-
-        <activity android:name=".MainActivity">
+        <activity android:name="com.spg.httpdnstest.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name="com.spg.httpdnstest.WebviewActivity"/>
+
+
+
     </application>
 
 
