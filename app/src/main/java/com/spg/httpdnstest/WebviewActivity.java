@@ -4,6 +4,7 @@ package com.spg.httpdnstest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.SSLCertificateSocketFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -50,19 +51,12 @@ public class WebviewActivity extends Activity {
     private WebView webView;
     private static final String targetUrl = "http://10.228.129.134:8080/aiohttpdns/d?host=www.baidu.com";
     private static final String TAG = "WebviewScene";
-//    private static HttpDnsService httpdns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
-//        import com.alibaba.sdk.android.httpdns.HttpDns;
-//        import com.alibaba.sdk.android.httpdns.HttpDnsService;
-        // 初始化httpdns
-//        httpdns = HttpDns.getService(getApplicationContext(), MainActivity.accountID);
-        // 预解析热点域名
-//        httpdns.setPreResolveHosts(new ArrayList<>(Arrays.asList("www.apple.com")));
 
         webView = (WebView) this.findViewById(R.id.wv_container);
         webView.setWebViewClient(new WebViewClient() {
@@ -133,6 +127,8 @@ public class WebviewActivity extends Activity {
                 // API < 21 只能拦截URL参数
                 return super.shouldInterceptRequest(view, url);
             }
+
+
         });
         webView.loadUrl(targetUrl);
     }
@@ -201,40 +197,52 @@ public class WebviewActivity extends Activity {
     }
 
     public URLConnection recursiveRequest(String path, Map<String, String> headers, String reffer) {
-        HttpURLConnection conn;
-        URL url = null;
         try {
-            url = new URL(path);
-            conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn;
+            URL url = new URL(path);
+//            conn = (HttpURLConnection) url.openConnection();
             // 异步接口获取IP
 //            String ip = httpdns.getIpByHostAsync(url.getHost());
 
-            String tmphost=url.getHost();
-            IResolver[] resolvers = new IResolver[1];
-            resolvers[0] = new Resolver(InetAddress.getByName(tmphost));
-            DnsManager dnsManager = new DnsManager(NetworkInfo.normal, resolvers);
-            String[] ips = dnsManager.query("www.baidu.com");  //获取HttpDNS解析结果
-            String ip=ips[0];
+            Uri uri = Uri.parse(path);
+            String dnsHost=uri.getQueryParameter("host");
 
+            if(dnsHost!=null)
+            {
+                String tmphost=url.getHost();
+                IResolver[] resolvers = new IResolver[1];
+                resolvers[0] = new Resolver(InetAddress.getByName(tmphost));
+                DnsManager dnsManager = new DnsManager(NetworkInfo.normal, resolvers);
+                String[] ips = dnsManager.query(dnsHost);  //获取HttpDNS解析结果
+                String ip=ips[0];
+                if (ip != null) {
+                    // 通过HTTPDNS获取IP成功，进行URL替换和HOST头设置
+                    Log.d(TAG, "Get IP: " + ip + " for host: " + url.getHost() + " from HTTPDNS successfully!");
+                    //测试代码
+                    String newUrl = "http://"+ip;
+//                String newUrl = path.replaceFirst(url.getHost(), ip);//使用时需要放开
+                    conn = (HttpURLConnection) new URL(newUrl).openConnection();
 
-
-
-            if (ip != null) {
-                // 通过HTTPDNS获取IP成功，进行URL替换和HOST头设置
-                Log.d(TAG, "Get IP: " + ip + " for host: " + url.getHost() + " from HTTPDNS successfully!");
-                String newUrl = path.replaceFirst(url.getHost(), ip);
-                conn = (HttpURLConnection) new URL(newUrl).openConnection();
-
-                if (headers != null) {
-                    for (Map.Entry<String, String> field : headers.entrySet()) {
-                        conn.setRequestProperty(field.getKey(), field.getValue());
+                    if (headers != null) {
+                        for (Map.Entry<String, String> field : headers.entrySet()) {
+                            conn.setRequestProperty(field.getKey(), field.getValue());
+                        }
                     }
+                    // 设置HTTP请求头Host域
+                    conn.setRequestProperty("Host", url.getHost());
+                } else {
+                    return null;
                 }
-                // 设置HTTP请求头Host域
-                conn.setRequestProperty("Host", url.getHost());
-            } else {
-                return null;
+            }else
+            {
+                conn = (HttpURLConnection) url.openConnection();
+                return conn;
             }
+
+
+
+
+
             conn.setConnectTimeout(30000);
             conn.setReadTimeout(30000);
             conn.setInstanceFollowRedirects(false);
@@ -276,7 +284,7 @@ public class WebviewActivity extends Activity {
                         location = originalUrl.getProtocol() + "://"
                                 + originalUrl.getHost() + location;
                     }
-                    Log.e(TAG, "code:" + code + "; location:" + location + "; path" + path);
+//                    Log.e(TAG, "code:" + code + "; location:" + location + "; path" + path);
                     return recursiveRequest(location, headers, path);
                 } else {
                     // 无法获取location信息，让浏览器获取
